@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/patrick/netbeans-6.9.1/java/modules/ext/appframework-1.0.3.jar"/>
 	<classpathentry kind="lib" path="/home/patrick/netbeans-6.9.1/java/modules/ext/swing-worker-1.1.jar"/>
+	<classpathentry kind="lib" path="/home/patrick/workspace/jep-2.4.1-ext-1.1.1-gpl/dist/jep-2.4.1.jar" sourcepath="/home/patrick/workspace/jep-2.4.1-ext-1.1.1-gpl/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

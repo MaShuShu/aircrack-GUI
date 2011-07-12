@@ -1,5 +1,7 @@
 package com.aircrack.core;
 
+import org.nfunk.jep.*;
+
 public class WifiAccessPoint {
 	private Integer CellNumber;
 	private String HWAddr;
@@ -12,8 +14,92 @@ public class WifiAccessPoint {
 	private Integer NoiseLevel;
 	private Boolean Encrypted;
 	private String BitRates;
+	
+public WifiAccessPoint(String StringSource) {
+		
+		Integer start = -1;
+		Integer end = -1;
+		String source="";
+		start = StringSource.indexOf("Cell ") + 5;
+		end = StringSource.indexOf("-", start);
+		CellNumber = Integer.parseInt(StringSource.substring(start, end).trim());
 
+		String token = "Address";
+		HWAddr = readToken(StringSource,token,"");
+
+		token = "Protocol";		
+		Protocol = readToken(StringSource,token,"");;
+
+		token = "ESSID";
+		ESSID = readToken(StringSource,token,"").replace("\"", "");
+
+		token = "Mode:";
+		Mode = readToken(StringSource,token,"");
+
+		token = "Channel";
+		Channel = Integer.parseInt(readToken(StringSource,token,""));
+
+		token = "Quality";
+		String temp=readToken(StringSource,token," ");
+		if (!temp.isEmpty()){
+			Quality = evaluateMath(temp) ;
+		}
+		Quality = evaluateMath(readToken(StringSource,token," ")) ;
+
+		token = "Signal level";
+		temp=readToken(StringSource,token," dBm");
+		if (!temp.isEmpty()){
+			SignalLevel = Integer.parseInt(temp);
+		}
+
+		token = "Noise level";
+		temp=readToken(StringSource,token," dBm");
+		if (!temp.isEmpty()){
+			NoiseLevel = Integer.parseInt(temp);
+		}
+
+		token = "Encryption key";
+		Encrypted = readToken(StringSource,token,"").equals("on");
+
+		/*token = "Bit Rates";
+		start = StringSource.indexOf(token) + token.length();
+		BitRates = StringSource.substring(start).trim();*/
+		}
+
+	private String readToken(String source, String token, String endtoken){
+		String res="";
+		String separator="=";
+		Integer start = source.indexOf(token+separator);
+		if (start==-1){
+			separator=":";
+			start = source.indexOf(token+separator);
+		}
+		if (start>-1){
+			start+=token.length()+1;
+			if (!endtoken.isEmpty()){
+				Integer end = source.indexOf(endtoken, start);
+				res = source.substring(start, end).trim();
+			} else {
+				res=source.substring(start).split("\n")[0].trim();
+			}
+		}
+		return res;
+	}
+
+	public Double evaluateMath(String expression){
+		Double res=-10000.0;
+		JEP jep = new JEP();
+		try {
+			Node n=jep.parse("70/70");
+			res=  (Double) jep.evaluate(n);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	/*
 	public WifiAccessPoint(String StringSource) {
+	 
 		Integer start = -1;
 		Integer end = -1;
 		String[] source = StringSource.split("\n");
@@ -64,7 +150,8 @@ public class WifiAccessPoint {
 		start = source[7].indexOf(token) + token.length();
 		BitRates = source[7].substring(start).trim();
 	}
-
+	*/
+	
 	public void Refresh(String SourceString) {
 		int start = -1;
 		int end = 0;
