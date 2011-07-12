@@ -1,0 +1,3 @@
+Opening /home/patrick/temp/pathome*.cap
+
+Quitting aircrack-ng...
