@@ -63,7 +63,8 @@ public WifiAccessPoint(String StringSource) {
 
 		/*token = "Bit Rates";
 		start = StringSource.indexOf(token) + token.length();
-		BitRates = StringSource.substring(start).trim();*/
+		BitRates = StringSource.substring(start).trim();
+		*/
 		}
 
 	private String readToken(String source, String token, String endtoken){

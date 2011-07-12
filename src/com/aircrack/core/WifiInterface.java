@@ -28,10 +28,9 @@ public class WifiInterface {
 	private void parseifconfig(String sequence) throws Exception {
 		String[] tokens = sequence.split("\t");
 		String name = tokens[0];
+		Name = name;		
 		HWaddr=getMAC(name);
-		Name = name;
-		/*
-		
+		if (HWaddr.isEmpty()){
 		try {
 			String cmd = "ifconfig " + name;
 
@@ -44,17 +43,14 @@ public class WifiInterface {
 				throw new Exception("Unable to create Object", new Throwable(
 						"Interface '" + name + "' doesn't exist"));
 			}
-			Name = name;
-			Chipset = tokens[2];
-			Driver = tokens[4];
 			int start = output.indexOf("HWaddr") + 7;
 			int end = output.indexOf("\n", start);
 			HWaddr = output.substring(start, end).trim();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-*/
 	}
 	
 	public static String toHex(byte[] bytes) {
@@ -65,6 +61,9 @@ public class WifiInterface {
 	private String getMAC(String interfaceName){
 		StringBuffer res=new StringBuffer();
 		try {
+			
+			Enumeration<NetworkInterface>nets= NetworkInterface.getNetworkInterfaces();
+			System.out.println(nets.toString());
 			NetworkInterface wlan=NetworkInterface.getByName(interfaceName);
 			if (wlan!=null){
 				byte[] b=wlan.getHardwareAddress();
@@ -77,6 +76,7 @@ public class WifiInterface {
 		        }
 				res.deleteCharAt(res.length()-1);
 			}
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -163,7 +163,8 @@ public class WifiInterface {
 				System.err.println("error:\n" + run.getCommandError());
 			}
 
-			int start = output.indexOf(Driver) + Driver.length();
+			//int start = output.indexOf(Driver) + Driver.length();
+			int start = output.indexOf(Name) + Name.length();
 			if (start > -1) {
 				String result = output.substring(start, output.length()).trim();
 				if (result.contains("enabled")) {
